@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { Trans } from 'react-i18next';
 import { FC, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 
 import { PageHeader } from 'common/styles/page';
 import { TableCard } from 'common/styles/card';
@@ -62,11 +63,11 @@ export const CandidateListView: FC = () => {
             <Trans i18nKey='candidateList.subheading'>All candidates in the system</Trans>
           </p>
           <div>
-            {/* <Link to='/users/create-user'> */}
+            <Link to='/candidates/create-candidate'>
               <CreateButton>
                 <Trans i18nKey='candidateList.createButton'>Add Candidate</Trans>
               </CreateButton>
-            {/* </Link> */}
+            </Link>
           </div>
         </div>
         </PageHeader>
