@@ -8,6 +8,7 @@ import { FC, useMemo } from 'react';
 import { PageHeader } from 'common/styles/page';
 import { TableCard } from 'common/styles/card';
 import { NoContent } from 'common/styles/utilities';
+import { CreateButton } from 'common/styles/button';
 
 import { CandidateTableItem, useCandidateTableData } from '../hooks/useCandidateTableData';
 
@@ -57,8 +58,18 @@ export const CandidateListView: FC = () => {
           <h1>
             <Trans i18nKey='candidateList.heading'>Candidate List</Trans>
           </h1>
+          <p>
+            <Trans i18nKey='candidateList.subheading'>All candidates in the system</Trans>
+          </p>
+          <div>
+            {/* <Link to='/users/create-user'> */}
+              <CreateButton>
+                <Trans i18nKey='candidateList.createButton'>Add Candidate</Trans>
+              </CreateButton>
+            {/* </Link> */}
+          </div>
         </div>
-
+        </PageHeader>
         <DataTableSearchAndFilters
           filters={filters}
           onSetFilter={addFilter}
@@ -103,7 +114,7 @@ export const CandidateListView: FC = () => {
             </WithLoadingOverlay>
           </Card.Body>
         </TableCard>
-      </PageHeader>
+      
     </Container>
   )
 }

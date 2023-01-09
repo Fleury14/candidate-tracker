@@ -15,7 +15,7 @@ class DepartmentSerializer(serializers.ModelSerializer):
         ]
 
 class CandidateSerializer(serializers.ModelSerializer):
-    department = DepartmentSerializer()
+    department = DepartmentSerializer(read_only=True, many=False)
     class Meta:
         model = Candidate
         fields = [
