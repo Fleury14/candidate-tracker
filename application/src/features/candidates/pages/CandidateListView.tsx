@@ -14,8 +14,8 @@ import { CreateButton } from 'common/styles/button';
 import { CandidateTableItem, useCandidateTableData } from '../hooks/useCandidateTableData';
 
 import { usePSFQuery } from 'common/hooks';
-import { PaginatedResult, Candidate } from 'common/models';
-import { useGetCandidatesQuery } from 'common/api/candidateApi';
+import { PaginatedResult, Candidate, Department } from 'common/models';
+import { useGetCandidatesQuery, useGetDepartmentsQuery } from 'common/api/candidateApi';
 import { DataTable } from 'common/components/DataTable';
 import { DataTableSearchAndFilters } from 'common/components/DataTable/DataTableSearchAndFilters';
 import { WithLoadingOverlay } from 'common/components/LoadingSpinner';
@@ -40,6 +40,9 @@ export const CandidateListView: FC = () => {
     resetFilters,
     addSearchText,
   } = usePSFQuery<PaginatedResult<Candidate>>(useGetCandidatesQuery);
+  const deptResults = usePSFQuery<PaginatedResult<Department>>(useGetDepartmentsQuery);
+  // console.log('dept results', deptResults);
+  const departments = useMemo(() => deptResults.data?.results ?? [], [deptResults.data] )
   const candidates = useMemo(() => data?.results ?? [], [data]);
   const { columns, data: tableData } = useCandidateTableData(candidates);
   const isPageLoading = isLoading;

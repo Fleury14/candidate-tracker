@@ -69,6 +69,10 @@ export const candidateApi = createApi({
                 method: 'DELETE',
             }),
             invalidatesTags: ['Candidate']
+        }),
+        getDepartments: builder.query({
+            query: () => ({ url: `/candidates/dept`}),
+            providesTags: ['Candidate']
         })
     })
 });
@@ -79,4 +83,5 @@ export const {
     useCreateCandidateMutation,
     useUpdateCandidateMutation,
     useDeleteCandidateMutation,
+    useGetDepartmentsQuery,
 } = candidateApi;
