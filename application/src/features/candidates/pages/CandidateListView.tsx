@@ -41,7 +41,6 @@ export const CandidateListView: FC = () => {
     addSearchText,
   } = usePSFQuery<PaginatedResult<Candidate>>(useGetCandidatesQuery);
   const deptResults = usePSFQuery<PaginatedResult<Department>>(useGetDepartmentsQuery);
-  // console.log('dept results', deptResults);
   const departments = useMemo(() => deptResults.data?.results ?? [], [deptResults.data] )
   const candidates = useMemo(() => data?.results ?? [], [data]);
   const { columns, data: tableData } = useCandidateTableData(candidates);

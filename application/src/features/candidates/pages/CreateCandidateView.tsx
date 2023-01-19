@@ -1,14 +1,23 @@
-import { FC } from 'react';
+import { FC, useState, useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Trans } from 'react-i18next';
 import { Card } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 
+import { CandidateDetailForm, FormData } from '../components/candidateDetailForm';
+import { useGetDepartmentsQuery } from 'common/api/candidateApi';
+import { PaginatedResult, ServerValidationErrors, Department } from 'common/models';
+import { usePSFQuery } from 'common/hooks';
 
 import { PageCrumb, PageHeader, SmallContainer } from 'common/styles/page';
 
 
 export const CreateCandidateView: FC = () => {
+
+  const [formValidationErrors, setFormValidationErrors] = useState<ServerValidationErrors<FormData> | null>(null);
+  const deptResults = usePSFQuery<PaginatedResult<Department>>(useGetDepartmentsQuery);
+  const departments = useMemo(() => deptResults.data?.results ?? [], [deptResults.data] )
+
   return (
     <SmallContainer>
       <PageCrumb>
@@ -34,6 +43,12 @@ export const CreateCandidateView: FC = () => {
       <Card>
         <Card.Body>
           <p>Insert Candidate Form here</p>
+          <CandidateDetailForm 
+            onSubmit={() => {}}
+            serverValidationErrors={formValidationErrors}
+            onCancel={() => {}}
+            departmentList={departments}
+          />
           {/* <UserDetailForm
             availableRoles={availableRoles}
             defaultValues={defaultValues}
