@@ -60,11 +60,15 @@ export const CandidateDetailForm: FC<Props> = ({
           addServerErrors(serverValidationErrors, setError);
         }
       }, [serverValidationErrors, setError]);
-      console.log('depts', departmentList);
+      console.log('depts', departmentList, 'errors', errors);
+
+      const preSubmit = (data: FormData) => {
+        onSubmit(data);
+      }
 
       return (
         <WithUnsavedChangesPrompt when={isDirty && !(isSubmitting || isSubmitted)}>
-          <Form>
+          <Form onSubmit={handleSubmit(preSubmit)}>
             <Row className='mb-2'>
               <Col xs={12} md={6}>
                 <Form.Group controlId='create-candidate-form-agent-name'>
@@ -87,14 +91,14 @@ export const CandidateDetailForm: FC<Props> = ({
                   <Form.Label>Department</Form.Label>
                   <Form.Select>
                     {departmentList.map(department => {
-                      return <option key={department.deptName}>{department.deptName}</option>
+                      return <option key={department.deptName} value={department.id}>{department.deptName}</option>
                     })}
                   </Form.Select>
                 </Form.Group>
               </Col>
             </Row>
             <div className="mt-3">
-              <LoadingButton type='submit' as={Button} disabled={isValid} loading={isSubmitting}>
+              <LoadingButton type='submit' as={Button} disabled={!isValid} loading={isSubmitting}>
                 {submitButtonLabel}
               </LoadingButton>
             </div>

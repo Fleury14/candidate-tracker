@@ -5,18 +5,45 @@ import { Card } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { CandidateDetailForm, FormData } from '../components/candidateDetailForm';
-import { useGetDepartmentsQuery } from 'common/api/candidateApi';
+import { useGetDepartmentsQuery, useCreateCandidateMutation } from 'common/api/candidateApi';
+import { isFetchBaseQueryError } from 'common/api/handleApiError';
 import { PaginatedResult, ServerValidationErrors, Department } from 'common/models';
+import * as notificationService from 'common/services/notification';
 import { usePSFQuery } from 'common/hooks';
+import { isObject } from 'common/error/utilities';
 
 import { PageCrumb, PageHeader, SmallContainer } from 'common/styles/page';
 
 
 export const CreateCandidateView: FC = () => {
 
+  const navigate = useNavigate();
   const [formValidationErrors, setFormValidationErrors] = useState<ServerValidationErrors<FormData> | null>(null);
+  const [createCandidate] = useCreateCandidateMutation();
   const deptResults = usePSFQuery<PaginatedResult<Department>>(useGetDepartmentsQuery);
   const departments = useMemo(() => deptResults.data?.results ?? [], [deptResults.data] )
+
+  const handleFormCancel = () => {
+    navigate(-1);
+  }
+
+  const handleFormSubmit = async (data: FormData) => {
+    try {
+      await createCandidate(data).unwrap();
+      notificationService.showSuccessMessage('Candidate created.');
+      navigate('/candidates');
+
+    } catch (error) {
+      notificationService.showErrorMessage('Unable to add candidate.');
+      if (error && isFetchBaseQueryError(error)) {
+        if (isObject(error.data)) {
+          setFormValidationErrors(error.data);
+        } else {
+          throw error;
+        }
+      }
+    }
+  }
 
   return (
     <SmallContainer>
@@ -44,9 +71,9 @@ export const CreateCandidateView: FC = () => {
         <Card.Body>
           <p>Insert Candidate Form here</p>
           <CandidateDetailForm 
-            onSubmit={() => {}}
+            onSubmit={handleFormSubmit}
             serverValidationErrors={formValidationErrors}
-            onCancel={() => {}}
+            onCancel={handleFormCancel}
             departmentList={departments}
           />
           {/* <UserDetailForm

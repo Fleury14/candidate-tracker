@@ -49,7 +49,7 @@ export const candidateApi = createApi({
         }),
         createCandidate: builder.mutation<Candidate, CreateCandidateRequest>({
             query: payload => ({
-                url: '/candidates',
+                url: '/candidates/',
                 method: 'POST',
                 body: payload
             }),
