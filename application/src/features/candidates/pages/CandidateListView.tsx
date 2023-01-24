@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { Trans } from 'react-i18next';
 import { FC, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { PageHeader } from 'common/styles/page';
 import { TableCard } from 'common/styles/card';
@@ -26,6 +26,7 @@ import { HasPermission } from 'features/rbac';
 
 
 export const CandidateListView: FC = () => {
+  const navigate = useNavigate();
   const {
     data,
     isLoading,
@@ -93,7 +94,7 @@ export const CandidateListView: FC = () => {
                 <DataTable<CandidateTableItem>
                   columns={columns}
                   data={tableData}
-                  onRowClick={() => {}}
+                  onRowClick={item => navigate(`/candidates/update-candidate/${item.id}`)}
                   pagination={{
                     basePage: 1,
                     page,

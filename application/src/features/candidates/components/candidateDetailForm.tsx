@@ -29,6 +29,7 @@ const schema = yup.object().shape({
     name: yup.string().required('Name is required'),
     email: yup.string().email().required('Email is required'),
     department: yup.number(),
+    id: yup.number(),
 });
 
 export const CandidateDetailForm: FC<Props> = ({
@@ -60,7 +61,7 @@ export const CandidateDetailForm: FC<Props> = ({
           addServerErrors(serverValidationErrors, setError);
         }
       }, [serverValidationErrors, setError]);
-      console.log('depts', departmentList, 'errors', errors);
+      console.log('depts', departmentList, 'errors', errors, isValid);
 
       const preSubmit = (data: FormData) => {
         onSubmit(data);
