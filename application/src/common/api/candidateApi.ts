@@ -65,7 +65,7 @@ export const candidateApi = createApi({
         }),
         deleteCandidate: builder.mutation<void, number>({
             query: candidateId => ({
-                url: `/candidates/${candidateId}/delete`,
+                url: `/candidates/${candidateId}/delete/`,
                 method: 'DELETE',
             }),
             invalidatesTags: ['Candidate']
