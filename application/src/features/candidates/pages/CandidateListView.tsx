@@ -4,16 +4,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { Trans } from 'react-i18next';
 import { FC, useMemo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { PageHeader } from 'common/styles/page';
 import { TableCard } from 'common/styles/card';
 import { NoContent } from 'common/styles/utilities';
+import { CreateButton } from 'common/styles/button';
 
 import { CandidateTableItem, useCandidateTableData } from '../hooks/useCandidateTableData';
 
 import { usePSFQuery } from 'common/hooks';
-import { PaginatedResult, Candidate } from 'common/models';
-import { useGetCandidatesQuery } from 'common/api/candidateApi';
+import { PaginatedResult, Candidate, Department } from 'common/models';
+import { useGetCandidatesQuery, useGetDepartmentsQuery } from 'common/api/candidateApi';
 import { DataTable } from 'common/components/DataTable';
 import { DataTableSearchAndFilters } from 'common/components/DataTable/DataTableSearchAndFilters';
 import { WithLoadingOverlay } from 'common/components/LoadingSpinner';
@@ -24,6 +26,7 @@ import { HasPermission } from 'features/rbac';
 
 
 export const CandidateListView: FC = () => {
+  const navigate = useNavigate();
   const {
     data,
     isLoading,
@@ -38,6 +41,8 @@ export const CandidateListView: FC = () => {
     resetFilters,
     addSearchText,
   } = usePSFQuery<PaginatedResult<Candidate>>(useGetCandidatesQuery);
+  const deptResults = usePSFQuery<PaginatedResult<Department>>(useGetDepartmentsQuery);
+  const departments = useMemo(() => deptResults.data?.results ?? [], [deptResults.data] )
   const candidates = useMemo(() => data?.results ?? [], [data]);
   const { columns, data: tableData } = useCandidateTableData(candidates);
   const isPageLoading = isLoading;
@@ -57,8 +62,18 @@ export const CandidateListView: FC = () => {
           <h1>
             <Trans i18nKey='candidateList.heading'>Candidate List</Trans>
           </h1>
+          <p>
+            <Trans i18nKey='candidateList.subheading'>All candidates in the system</Trans>
+          </p>
+          <div>
+            <Link to='/candidates/create-candidate'>
+              <CreateButton>
+                <Trans i18nKey='candidateList.createButton'>Add Candidate</Trans>
+              </CreateButton>
+            </Link>
+          </div>
         </div>
-
+        </PageHeader>
         <DataTableSearchAndFilters
           filters={filters}
           onSetFilter={addFilter}
@@ -79,7 +94,7 @@ export const CandidateListView: FC = () => {
                 <DataTable<CandidateTableItem>
                   columns={columns}
                   data={tableData}
-                  onRowClick={() => {}}
+                  onRowClick={item => navigate(`/candidates/update-candidate/${item.id}`)}
                   pagination={{
                     basePage: 1,
                     page,
@@ -103,7 +118,7 @@ export const CandidateListView: FC = () => {
             </WithLoadingOverlay>
           </Card.Body>
         </TableCard>
-      </PageHeader>
+      
     </Container>
   )
 }

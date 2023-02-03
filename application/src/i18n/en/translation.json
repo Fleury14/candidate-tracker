@@ -5,7 +5,9 @@
     "createButton": "Add Agent"
   },
   "candidateList": {
-    "heading": "Candidate List"
+    "heading": "Candidate List",
+    "subheading": "All candidates in the system",
+    "createButton": "Add Candidate"
   },
   "userDetail": {
     "heading": "Profile",
@@ -19,6 +21,11 @@
     "back": "Back to User List",
     "heading": "Create User",
     "subheading": "Add a new user to the system."
+  },
+  "createCandidate": {
+    "back": "Back to Candidate List",
+    "heading": "Create Candidate",
+    "subheading": "Add a new candidate to the system"
   },
   "updateUser": {
     "heading": "Update User",

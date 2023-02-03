@@ -6,13 +6,20 @@ import { SortingQueryParams } from 'common/models/sorting';
 import { customBaseQuery } from './customBaseQuery';
 import { QueryParamsBuilder } from './queryParamsBuilder';
 
+export interface CandidateFormData {
+    id?: number,
+    name: string;
+    email: string;
+    department: number;
+  };
+
 export type CreateCandidateRequest = Pick<
-    Candidate,
+    CandidateFormData,
     'name' | 'email' | 'department'
 >;
 
 export type UpdateCandidateRequest = Pick<
-    Candidate,
+    CandidateFormData,
     'id' | 'name' | 'email' | 'department'
 >;
 
@@ -49,7 +56,7 @@ export const candidateApi = createApi({
         }),
         createCandidate: builder.mutation<Candidate, CreateCandidateRequest>({
             query: payload => ({
-                url: '/candidates',
+                url: '/candidates/',
                 method: 'POST',
                 body: payload
             }),
@@ -57,7 +64,7 @@ export const candidateApi = createApi({
         }),
         updateCandidate: builder.mutation<Candidate, UpdateCandidateRequest>({
             query: ({ id, ...candidateUpdate }) => ({
-                url: `/candidates/${id}/update`,
+                url: `/candidates/${id}/update/`,
                 method: 'PUT',
                 body: candidateUpdate
             }),
@@ -65,10 +72,14 @@ export const candidateApi = createApi({
         }),
         deleteCandidate: builder.mutation<void, number>({
             query: candidateId => ({
-                url: `/candidates/${candidateId}/delete`,
+                url: `/candidates/${candidateId}/delete/`,
                 method: 'DELETE',
             }),
             invalidatesTags: ['Candidate']
+        }),
+        getDepartments: builder.query({
+            query: () => ({ url: `/candidates/dept`}),
+            providesTags: ['Candidate']
         })
     })
 });
@@ -79,4 +90,5 @@ export const {
     useCreateCandidateMutation,
     useUpdateCandidateMutation,
     useDeleteCandidateMutation,
+    useGetDepartmentsQuery,
 } = candidateApi;

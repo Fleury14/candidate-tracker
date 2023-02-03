@@ -11,11 +11,12 @@ class DepartmentSerializer(serializers.ModelSerializer):
         fields = [
             "dept_name",
             "contact",
-            "contact_email"
+            "contact_email",
+            "id"
         ]
 
 class CandidateSerializer(serializers.ModelSerializer):
-    department = DepartmentSerializer()
+    department = DepartmentSerializer(read_only=True, many=False)
     class Meta:
         model = Candidate
         fields = [
