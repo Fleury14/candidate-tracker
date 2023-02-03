@@ -6,13 +6,20 @@ import { SortingQueryParams } from 'common/models/sorting';
 import { customBaseQuery } from './customBaseQuery';
 import { QueryParamsBuilder } from './queryParamsBuilder';
 
+export interface CandidateFormData {
+    id?: number,
+    name: string;
+    email: string;
+    department: number;
+  };
+
 export type CreateCandidateRequest = Pick<
-    Candidate,
+    CandidateFormData,
     'name' | 'email' | 'department'
 >;
 
 export type UpdateCandidateRequest = Pick<
-    Candidate,
+    CandidateFormData,
     'id' | 'name' | 'email' | 'department'
 >;
 
@@ -57,7 +64,7 @@ export const candidateApi = createApi({
         }),
         updateCandidate: builder.mutation<Candidate, UpdateCandidateRequest>({
             query: ({ id, ...candidateUpdate }) => ({
-                url: `/candidates/${id}/update`,
+                url: `/candidates/${id}/update/`,
                 method: 'PUT',
                 body: candidateUpdate
             }),

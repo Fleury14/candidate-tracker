@@ -10,10 +10,17 @@ import WithUnsavedChangesPrompt from 'common/components/WithUnsavedChangesPrompt
 import { LoadingButton } from 'common/components/LoadingButton';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-export type FormData = Pick<Candidate, 'name' | 'email' | 'department'>;
+export interface CandidateFormData {
+  id?: number;
+  name: string;
+  email: string;
+  department: number;
+};
+
+export type FormData = Pick<CandidateFormData, 'name' | 'email' | 'department'>;
 
 export type Props = {
-    defaultValues?: FormData;
+    defaultValues?: CandidateFormData;
     submitButtonLabel?: string;
     cancelButtonLabel?: string;
     onSubmit: (data: FormData) => void;
@@ -61,7 +68,6 @@ export const CandidateDetailForm: FC<Props> = ({
           addServerErrors(serverValidationErrors, setError);
         }
       }, [serverValidationErrors, setError]);
-      console.log('depts', departmentList, 'errors', errors, isValid);
 
       const preSubmit = (data: FormData) => {
         onSubmit(data);

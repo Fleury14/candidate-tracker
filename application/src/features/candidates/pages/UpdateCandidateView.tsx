@@ -4,14 +4,14 @@ import { isFetchBaseQueryError } from 'common/api/handleApiError';
 import { WithLoadingOverlay } from 'common/components/LoadingSpinner';
 import { isObject } from 'common/error/utilities';
 import { usePSFQuery } from 'common/hooks';
-import { Department, PaginatedResult, ServerValidationErrors } from 'common/models';
+import { Department, Candidate, PaginatedResult, ServerValidationErrors } from 'common/models';
 import * as notificationService from 'common/services/notification';
 import { PageCrumb, SmallContainer, PageHeader } from 'common/styles/page';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { Card } from 'react-bootstrap';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 
-import { CandidateDetailForm, FormData } from '../components/candidateDetailForm';
+import { CandidateDetailForm, FormData, CandidateFormData } from '../components/candidateDetailForm';
 
 export type RouteParams = {
     id: string;
@@ -54,6 +54,18 @@ export const UpdateCandidateView: FC = () => {
     }
   };
 
+  const handleCandidateData = (candidate: Candidate | undefined) => {
+    const result: CandidateFormData | undefined = candidate && candidate.department && candidate.department.id ?
+    {
+      id: candidate.id,
+      name: candidate.name,
+      email: candidate.email,
+      department: candidate.department.id
+    } :
+    undefined;
+    return result;
+  }
+
   return (
     <SmallContainer>
       <PageCrumb>
@@ -77,7 +89,7 @@ export const UpdateCandidateView: FC = () => {
           >
             {!isLoadingCandidate ? (
               <CandidateDetailForm
-                defaultValues={candidate}
+                defaultValues={handleCandidateData(candidate)}
                 submitButtonLabel='Save'
                 onSubmit={handleFormSubmit}
                 onCancel={handleFormCancel}
