@@ -1,5 +1,6 @@
 import { Column } from 'react-table';
 import { useCallback, useMemo } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 
 import { ActionButton, ActionButtonProps } from 'common/styles/button';
 import { Candidate } from 'common/models';
@@ -30,6 +31,11 @@ export const useCandidateTableData: UseCandidateTableData = (candidates = []) =>
     const [deleteCandidate] = useDeleteCandidateMutation();
     const { openModal } = useConfirmationModal();
     const { userHasPermission } = useRbac();
+    const navigate = useNavigate();
+
+    const handleNavigate = (candidate: Candidate) => {
+        navigate(`dashboard/${candidate.id}`);
+    }
 
     const handleDelete = useCallback((candidate: Candidate) => {
         const message = `Delete ${candidate.name}?`;
@@ -63,20 +69,31 @@ export const useCandidateTableData: UseCandidateTableData = (candidates = []) =>
     );
 
     const data: CandidateTableItem[] = useMemo(
-        () => candidates.map(candidate => ({
-            id: candidate.id,
-            name: candidate.name,
-            email: candidate.email,
-            department: candidate.department,
-            actions: [{
-                text: 'Delete',
-                onClick: e => {
-                    e.stopPropagation();
-                    handleDelete(candidate);
-                },
-                show: userHasPermission({ permission: 'agent:delete', data: candidate })
-            }]
-        })),
+        () => {
+            return candidates.map(candidate => ({
+                id: candidate.id,
+                name: candidate.name,
+                email: candidate.email,
+                department: candidate.department,
+                actions: [{
+                    text: 'Delete',
+                    onClick: e => {
+                        e.stopPropagation();
+                        handleDelete(candidate);
+                    },
+                    show: userHasPermission({ permission: 'agent:delete', data: candidate })
+                }
+                ,{
+                    text: 'Dashboard',
+                    actionId: candidate.id,
+                    onClick: e => {
+                        e.stopPropagation();
+                        handleNavigate(candidate)
+                    },
+                    show: userHasPermission({ permission: 'agent:read', data: candidate })
+                }
+            ]
+        }))},
         [candidates, userHasPermission, handleDelete],
     );
 
